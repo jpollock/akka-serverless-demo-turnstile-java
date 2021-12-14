@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package com.example.demo.turnstile.domain;
+
+import "akkaserverless/annotations.proto";
+
+option (akkaserverless.file).value_entity = {
+    name: "Turnstile"
+    entity_type: "turnstile"
+    state: "TurnstileState"
+};
+
+message TurnstileState {
+    string turnstile_id = 1;
+    enum Status {
+        LOCKED = 0;
+        UNLOCKED = 1;
+    }
+    Status status = 2;
+}

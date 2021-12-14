@@ -1,0 +1,78 @@
+// This is the public API offered by your entity.
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "akkaserverless/annotations.proto";
+import "google/api/annotations.proto";
+
+import "com/example/demo/turnstile/domain/turnstile_domain.proto";
+
+package com.example.demo.turnstile;
+
+message StateChangeCommand {
+    string turnstile_id = 1 [(akkaserverless.field).entity_key = true];
+    enum Event {
+        PUSHED = 0;
+        COINED = 1;
+    }
+    Event event = 2;
+}
+
+message GetTurnstile {
+    string turnstile_id = 1 [(akkaserverless.field).entity_key = true];
+}
+
+message Turnstile {
+    enum Status {
+        LOCKED = 0;
+        UNLOCKED = 1;
+    }
+    Status status = 1;
+}
+
+service TurnstileService {
+    option (akkaserverless.service) = {
+        type : SERVICE_TYPE_ENTITY
+        component : "com.example.demo.turnstile.domain.Turnstile"
+    };
+    rpc HandleEvent(StateChangeCommand) returns (domain.TurnstileState) {
+        option (google.api.http) = {
+            put: "/turnstiles/{turnstile_id}/process",
+            body: "*"
+        };
+    }
+
+    rpc GetCurrentTurnstile(GetTurnstile) returns (domain.TurnstileState) {
+        option (google.api.http) = {
+            get: "/turnstiles/{turnstile_id}"
+        };
+    }
+}
+
+message TurnstilesResponse {
+    repeated domain.TurnstileState results = 1;
+}
+
+service TurnstileQueryService {
+    option (akkaserverless.service) = {
+        type: SERVICE_TYPE_VIEW
+    };
+    
+    rpc UpdateView(domain.TurnstileState) returns (domain.TurnstileState) {
+        option (akkaserverless.method).eventing.in = { // <4>
+            value_entity: "turnstile"
+        };
+        option (akkaserverless.method).view.update = { // <5>
+            table: "turnstiles"
+        };
+    }
+
+    rpc GetTurnstilesByStatus(google.protobuf.Empty) returns (TurnstilesResponse) {
+        option (akkaserverless.method).view.query = {
+          query: "SELECT * AS results FROM turnstiles"
+        };
+        option (google.api.http) = {
+            get: "/turnstiles"
+        };  
+    }  
+}

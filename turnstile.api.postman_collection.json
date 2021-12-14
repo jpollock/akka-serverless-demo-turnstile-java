@@ -1,0 +1,170 @@
+{
+	"info": {
+		"_postman_id": "8207dd00-9413-484c-8b19-118bdc69a5c1",
+		"name": "Akka Serverless Demo: Turnstile State Machine API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Push",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"event\": 0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{tls}}://{{apiHost}}/turnstiles/{{turnstile_id}}/process",
+					"protocol": "{{tls}}",
+					"host": [
+						"{{apiHost}}"
+					],
+					"path": [
+						"turnstiles",
+						"{{turnstile_id}}",
+						"process"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Coin",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"event\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{tls}}://{{apiHost}}/turnstiles/{{turnstile_id}}/process",
+					"protocol": "{{tls}}",
+					"host": [
+						"{{apiHost}}"
+					],
+					"path": [
+						"turnstiles",
+						"{{turnstile_id}}",
+						"process"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Turnstile",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{tls}}://{{apiHost}}/turnstiles/{{turnstile_id}}",
+					"protocol": "{{tls}}",
+					"host": [
+						"{{apiHost}}"
+					],
+					"path": [
+						"turnstiles",
+						"{{turnstile_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Turnstiles",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{tls}}://{{apiHost}}/turnstiles",
+					"protocol": "{{tls}}",
+					"host": [
+						"{{apiHost}}"
+					],
+					"path": [
+						"turnstiles"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.collectionVariables.set(\"turnstile_id\", \"my_first_turnstile\");",
+					"pm.collectionVariables.set(\"tls\", \"http\")",
+					"pm.collectionVariables.set(\"apiHost\", \"localhost:9000\")"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "user_id",
+			"value": ""
+		},
+		{
+			"key": "device1_id",
+			"value": ""
+		},
+		{
+			"key": "device2_id",
+			"value": ""
+		},
+		{
+			"key": "apiHostQuerying",
+			"value": ""
+		},
+		{
+			"key": "apiHostHeartbeat",
+			"value": ""
+		},
+		{
+			"key": "apiHostState",
+			"value": ""
+		},
+		{
+			"key": "turnstile_id",
+			"value": ""
+		},
+		{
+			"key": "apiHost",
+			"value": ""
+		},
+		{
+			"key": "tls",
+			"value": ""
+		}
+	]
+}
